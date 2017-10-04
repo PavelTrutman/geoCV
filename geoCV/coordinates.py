@@ -38,6 +38,23 @@ class Coordinates:
     return (points/np.matlib.repmat(points[-1, :], points.shape[0], 1))[:-1, :]
 
 
+  def onedim2col(vector):
+    """
+    Converts one dimensional vector to a column vector.
+
+    Args:
+      vector (array): one dimensional vector
+
+    Returns:
+      array: 2D column vector
+    """
+
+    if len(vector.shape) != 1:
+      raise ValueError('Vector must be one dimensional.')
+
+    return vector[:, np.newaxis]
+
+
   def calibrate(points, K):
     """
     Calibrates points by the given calibration matrix.

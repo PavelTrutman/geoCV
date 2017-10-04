@@ -62,6 +62,18 @@ class TestCoordinates(unittest.TestCase):
         self.assertLessEqual(np.linalg.norm(a - geoCV.coordinates.h2a(h)), 1e-3)
 
 
+  def testOnedim2col(self):
+    """
+    Test casting from 1D numpy array to 2D column vector.
+    """
+
+    dims = [5, 10, 15, 25, 50, 100]
+    for i in range(len(dims)):
+      with self.subTest(i = i):
+        v = np.random.randn(dims[i])
+        self.assertEqual((dims[i], 1), geoCV.coordinates.onedim2col(v).shape)
+
+
   def testCalibrate(self):
     """
     Test calibrate on one example.
