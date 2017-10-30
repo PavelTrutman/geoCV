@@ -34,5 +34,17 @@ class TestLinalg(unittest.TestCase):
         self.assertLessEqual(np.linalg.norm(As.dot(null.dot(np.random.rand(dims[i] - r, 1)))), 1e-3)
 
 
+  def testRandomRotation(self):
+    """
+    Test random rotation matrices generation.
+    """
+
+    for i in range(50):
+      with self.subTest(i = i):
+        R = geoCV.linalg.randomRotation()
+
+        self.assertLessEqual(np.linalg.norm(R.dot(R.T) - np.eye(3)), 1e-3)
+
+
 if __name__ == '__main__':
   unittest.main()

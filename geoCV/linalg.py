@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from .coordinates import Coordinates
 import numpy as np
 
 class Linalg:
@@ -34,3 +35,22 @@ class Linalg:
     nnz = (s >= tol).sum()
     ns = vh[nnz:].conj().T
     return ns
+
+
+  def randomRotation():
+    """
+    Generates random rotation matrix of size 3x3.
+
+    Firstly, a quaternion from normal distribution is sampled and then is is converted to the matrix representation.
+
+    Args:
+
+    Returns:
+      array: 3x3 rotation matrix
+    """
+
+    q = np.random.randn(4)
+    q = Coordinates.normalize(q)
+    R = np.array([[q[0, 0]**2 + q[1, 0]**2 - q[2, 0]**2 - q[3, 0]**2, 2*q[1, 0]*q[2, 0] - 2*q[0, 0]*q[3, 0], 2*q[1, 0]*q[3, 0] + 2*q[0, 0]*q[2, 0]], [2*q[1, 0]*q[2, 0] + 2*q[0, 0]*q[3, 0], q[0, 0]**2 - q[1, 0]**2 + q[2, 0]**2 - q[3, 0]**2, 2*q[2, 0]*q[3, 0] - 2*q[0, 0]*q[1, 0]], [2*q[1, 0]*q[3, 0] - 2*q[0, 0]*q[2, 0], 2*q[2, 0]*q[3, 0] + 2*q[0, 0]*q[1, 0], q[0, 0]**2 - q[1, 0]**2 - q[2, 0]**2 + q[3, 0]**2]])
+
+    return R
