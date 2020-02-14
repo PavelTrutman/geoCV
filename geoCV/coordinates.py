@@ -23,7 +23,9 @@ class Coordinates:
 
     points = Coordinates.columnize(points)
 
-    return np.vstack((points, np.ones((1, points.shape[1]))))
+    points = np.vstack((points, np.empty((1, points.shape[1]))))
+    points[-1, :] = 1
+    return points
 
 
   def h2a(points):
@@ -94,6 +96,24 @@ class Coordinates:
     return Kinv.dot(points)
 
 
+  def undistort(points, radial):
+    """
+    Undistort points distorted by radial distorsion.
+
+    Args:
+      points (array): coordinates of points in columns
+      radial (float): parameter of the radial distorsion model
+
+    Returns:
+      array: undistorted points
+    """
+
+    points = Coordinates.columnize(points)
+
+    affine = Coordinates.h2a(points)
+    radialCoefs = 1 + radial*numpy.sum(affine**2, axis=0)
+    return Coordinates.a2h(affine*radialCoefs)
+
   def vectorNorm(vectors):
     """
     Computes columnvise 2 norm.
@@ -128,3 +148,23 @@ class Coordinates:
       return vectors/np.matlib.repmat(vectors[-1, :], vectors.shape[0], 1)
     else:
       return vectors/np.matlib.repmat(Coordinates.vectorNorm(vectors), vectors.shape[0], 1)
+
+
+  def angle(x, y):
+    """
+    Computes angles between vectors.
+
+    Args:
+      x (array): coordinates column wise
+      y (array): coordinates column wise
+    Returns:
+      array: angles between the vectors
+    """
+
+    x = Coordinates.normalize(x)
+    y = Coordinates.normalize(y)
+
+    angleCos = numpy.abs(numpy.sum(x*y, axis=0))
+    numpy.clip(angleCos, -1, 1, out=angleCos)
+    angle = numpy.arccos(angleCos)
+    return angle
